@@ -1,6 +1,5 @@
 import {
   GraphQLBoolean,
-  GraphQLEnumType,
   GraphQLInputObjectType,
   GraphQLInt,
   GraphQLNonNull,
@@ -8,6 +7,7 @@ import {
 } from 'graphql';
 import { UUIDType } from './uuid.js';
 import { userType } from './user.js';
+import { MemberTypeId, memberTypeIdEnum } from './memberType.js';
 
 export interface ProfileInput {
   isMale: boolean;
@@ -15,23 +15,6 @@ export interface ProfileInput {
   memberTypeId: MemberTypeId;
   userId: string;
 }
-
-enum MemberTypeId {
-  BASIC = 'BASIC',
-  BUSINESS = 'BUSINESS',
-}
-
-export const memberTypeIdEnum = new GraphQLEnumType({
-  name: 'MemberTypeId',
-  values: {
-    [MemberTypeId.BASIC]: {
-      value: MemberTypeId.BASIC,
-    },
-    [MemberTypeId.BUSINESS]: {
-      value: MemberTypeId.BUSINESS,
-    },
-  },
-});
 
 export const profileType = new GraphQLObjectType({
   name: 'Profile',

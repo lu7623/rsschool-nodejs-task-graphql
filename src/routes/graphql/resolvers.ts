@@ -2,10 +2,11 @@ import { PrismaClient } from '@prisma/client';
 import { UserInput } from './types/user.js';
 import { UUID } from 'node:crypto';
 import { ProfileInput } from './types/profile.js';
+import { PostInput } from './types/posts.js';
 
 const prisma = new PrismaClient();
 
-const getUser = async (args: { id: string }) => {
+const user = async (args: { id: string }) => {
   const user = await prisma.user.findUnique({
     where: {
       id: args.id,
@@ -14,7 +15,7 @@ const getUser = async (args: { id: string }) => {
   return user;
 };
 
-const getUsers = async () => {
+const users = async () => {
   const users = await prisma.user.findMany();
   return users;
 };
@@ -53,7 +54,7 @@ const deleteUser = async (args: { id: string }) => {
   }
 };
 
-const getProfile = async (args: { id: string }) => {
+const profile = async (args: { id: string }) => {
   const profile = await prisma.profile.findUnique({
     where: {
       id: args.id,
@@ -62,7 +63,7 @@ const getProfile = async (args: { id: string }) => {
   return profile;
 };
 
-const getProfiles = async () => {
+const profiles = async () => {
   const profiles = await prisma.profile.findMany();
   return profiles;
 };
@@ -102,15 +103,85 @@ const deleteProfile = async (args: { id: string }) => {
   }
 };
 
+const memberType = async  (args: { id: string }) => {
+  const memberType = await prisma.memberType.findUnique({
+    where: {
+      id: args.id,
+    },
+  });
+  return memberType;
+};
+
+const memberTypes = async () => {
+  const memberTypes = await prisma.memberType.findMany();
+  return memberTypes;
+};
+
+const post = async  (args: { id: string }) => {
+  const post = await prisma.post.findUnique({
+    where: {
+      id: args.id,
+    },
+  });
+  return post;
+};
+
+const posts = async () => {
+  const posts = await prisma.post.findMany();
+  return posts;
+};
+
+const createPost = async (args: { dto: PostInput }) => {
+  const post = await prisma.post.create({
+    data: args.dto,
+  });
+
+  return post;
+};
+
+const changePost = async (args: { id: UUID; dto: PostInput }) => {
+  try {
+    const post = await prisma.post.update({
+      where: {
+        id: args.id,
+      },
+      data: args.dto,
+    });
+    return post;
+  } catch {
+    return null;
+  }
+};
+
+const deletePost = async (args: { id: string }) => {
+  try {
+    await prisma.post.delete({
+      where: {
+        id: args.id,
+      },
+    });
+    return args.id;
+  } catch {
+    return null;
+  }
+};
+
 export default {
-  user: getUser,
-  users: getUsers,
+  user,
+  users,
   createUser,
   changeUser,
   deleteUser,
-  profile: getProfile,
-  profiles: getProfiles,
+  profile,
+  profiles,
   createProfile,
   changeProfile,
   deleteProfile,
+  memberType,
+  memberTypes,
+  post,
+  posts,
+  createPost, 
+  changePost,
+  deletePost
 };
