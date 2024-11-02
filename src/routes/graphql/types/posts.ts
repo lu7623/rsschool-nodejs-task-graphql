@@ -1,3 +1,4 @@
+import { userType } from './user.js';
 import {
   GraphQLInputObjectType,
   GraphQLNonNull,
@@ -5,12 +6,13 @@ import {
   GraphQLString,
 } from 'graphql';
 import { UUIDType } from './uuid.js';
-import { userType } from './user.js';
+import rootValue, { prisma } from '../resolvers.js';
+import { Post } from '@prisma/client';
 
 export interface PostInput {
   title: string;
   content: string;
-  authorId: string
+  authorId: string;
 }
 
 export const postType = new GraphQLObjectType({
@@ -19,7 +21,16 @@ export const postType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(UUIDType) },
     title: { type: new GraphQLNonNull(GraphQLString) },
     content: { type: new GraphQLNonNull(GraphQLString) },
-    author: {type: userType }
+    authorId: { type: UUIDType },
+    author: {
+      type: userType as GraphQLObjectType,
+      resolve: async (source: Post) =>
+        await prisma.user.findUnique({
+          where: {
+            id: source.authorId,
+          },
+        }),
+    },
   },
 });
 

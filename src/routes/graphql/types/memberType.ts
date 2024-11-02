@@ -7,6 +7,7 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import { profileType } from './profile.js';
+import { prisma } from '../resolvers.js';
 
 export enum MemberTypeId {
   BASIC = 'BASIC',
@@ -39,6 +40,8 @@ export const memberType = new GraphQLObjectType({
     postsLimitPerMonth: { type: new GraphQLNonNull(GraphQLInt) },
     profiles: {
       type: new GraphQLList(profileType),
+      resolve: async (source: MemberType) =>
+        await prisma.profile.findMany({ where: { memberTypeId: source.id } }),
     },
   }),
 });

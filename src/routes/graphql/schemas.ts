@@ -1,5 +1,12 @@
 import { Type } from '@fastify/type-provider-typebox';
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { changePostInputType, createPostInputType, postType } from './types/posts.js';
+import {
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLString,
+} from 'graphql';
 import { createUserInputType, changeUserInputType, userType } from './types/user.js';
 import { UUIDType } from './types/uuid.js';
 import {
@@ -7,8 +14,7 @@ import {
   createProfileInputType,
   profileType,
 } from './types/profile.js';
-import { memberType } from './types/memberType.js';
-import { changePostInputType, createPostInputType, postType } from './types/posts.js';
+import { memberType, memberTypeIdEnum } from './types/memberType.js';
 
 export const gqlResponseSchema = Type.Partial(
   Type.Object({
@@ -52,7 +58,7 @@ const query = new GraphQLObjectType({
     memberType: {
       type: memberType,
       args: {
-        id: { type: new GraphQLNonNull(UUIDType) },
+        id: { type: new GraphQLNonNull(memberTypeIdEnum) },
       },
     },
     memberTypes: {
@@ -118,7 +124,7 @@ const mutation = new GraphQLObjectType({
       },
     },
     changePost: {
-      type: profileType,
+      type: postType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: changePostInputType },
@@ -128,6 +134,20 @@ const mutation = new GraphQLObjectType({
       type: UUIDType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
+      },
+    },
+    subscribeTo: {
+      type: userType,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+    },
+    unsubscribeFrom: {
+      type: GraphQLString,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
       },
     },
   },
