@@ -16,16 +16,16 @@ export interface PostInput {
 }
 
 export interface ChangePostInput {
-    title: string;
-    content: string;
-  }
+  title: string;
+  content: string;
+}
 
 export const postType = new GraphQLObjectType({
   name: 'Post',
   fields: {
     id: { type: new GraphQLNonNull(UUIDType) },
-    title: { type: GraphQLString },
-    content: { type: GraphQLString},
+    title: { type: new GraphQLNonNull(GraphQLString) },
+    content: { type: new GraphQLNonNull(GraphQLString) },
     authorId: { type: UUIDType },
     author: {
       type: userType as GraphQLObjectType,
@@ -52,6 +52,6 @@ export const changePostInputType = new GraphQLInputObjectType({
   name: 'ChangePostInput',
   fields: {
     title: { type: GraphQLString },
-    content: { type: GraphQLString},
+    content: { type: GraphQLString },
   },
 });
