@@ -166,13 +166,13 @@ const deletePost = async (args: { id: string }) => {
   }
 };
 
-const subscribeTo = async (args: { userId: string, authorId:string }) => {
-  try {
-    const user = prisma.user.update({
-      where: { id:args.userId },
-      data: { userSubscribedTo: { create: { authorId:args.authorId } } },
+const subscribeTo = async (args: { userId: UUID, authorId:UUID }) => {
+   try{ await prisma.subscribersOnAuthors.create({
+      data: {
+        subscriberId: args.userId,
+        authorId: args.authorId,
+      },
     });
-    return user;
   } catch {
     return null;
   }

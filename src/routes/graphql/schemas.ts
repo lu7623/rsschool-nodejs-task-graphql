@@ -137,7 +137,7 @@ const mutation = new GraphQLObjectType({
       },
     },
     subscribeTo: {
-      type: userType as GraphQLObjectType,
+      type: GraphQLString,
       args: {
         userId: { type: new GraphQLNonNull(UUIDType) },
         authorId: { type: new GraphQLNonNull(UUIDType) },
