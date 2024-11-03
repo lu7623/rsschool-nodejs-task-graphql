@@ -17,6 +17,12 @@ export interface ProfileInput {
   userId: string;
 }
 
+export interface ChangeProfileInput {
+    isMale?: boolean;
+    yearOfBirth?: number;
+    memberTypeId?: MemberTypeId;
+  }
+
 export const profileType = new GraphQLObjectType({
   name: 'Profile',
   fields: {
@@ -29,7 +35,7 @@ export const profileType = new GraphQLObjectType({
       resolve: async (source: Profile) =>
         await prisma.memberType.findUnique({ where: { id: source.memberTypeId } }),
     },
-    userId: { type: UUIDType },
+    userId: { type: new GraphQLNonNull(UUIDType) },
   },
 });
 
@@ -46,8 +52,8 @@ export const createProfileInputType = new GraphQLInputObjectType({
 export const changeProfileInputType = new GraphQLInputObjectType({
   name: 'ChangeProfileInput',
   fields: {
-    isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
-    yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
-    memberTypeId: { type: new GraphQLNonNull(memberTypeIdEnum) },
+    isMale: { type: GraphQLBoolean },
+    yearOfBirth: { type: GraphQLInt },
+    memberTypeId: { type: memberTypeIdEnum },
   },
 });

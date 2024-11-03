@@ -6,7 +6,7 @@ import {
   GraphQLString,
 } from 'graphql';
 import { UUIDType } from './uuid.js';
-import rootValue, { prisma } from '../resolvers.js';
+import { prisma } from '../resolvers.js';
 import { Post } from '@prisma/client';
 
 export interface PostInput {
@@ -14,6 +14,11 @@ export interface PostInput {
   content: string;
   authorId: string;
 }
+
+export interface ChangePostInput {
+    title: string;
+    content: string;
+  }
 
 export const postType = new GraphQLObjectType({
   name: 'Post',

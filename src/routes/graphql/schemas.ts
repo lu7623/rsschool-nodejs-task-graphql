@@ -38,7 +38,7 @@ const query = new GraphQLObjectType({
   name: 'Query',
   fields: {
     user: {
-      type: userType,
+      type: userType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
@@ -47,7 +47,7 @@ const query = new GraphQLObjectType({
       type: new GraphQLList(userType),
     },
     profile: {
-      type: profileType,
+      type: profileType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
@@ -56,7 +56,7 @@ const query = new GraphQLObjectType({
       type: new GraphQLList(profileType),
     },
     memberType: {
-      type: memberType,
+      type: memberType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(memberTypeIdEnum) },
       },
@@ -65,7 +65,7 @@ const query = new GraphQLObjectType({
       type: new GraphQLList(memberType),
     },
     post: {
-      type: postType,
+      type: postType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
@@ -80,13 +80,13 @@ const mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     createUser: {
-      type: userType,
+      type: userType as GraphQLObjectType,
       args: {
         dto: { type: createUserInputType },
       },
     },
     changeUser: {
-      type: userType,
+      type: userType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: changeUserInputType },
@@ -99,13 +99,13 @@ const mutation = new GraphQLObjectType({
       },
     },
     createProfile: {
-      type: profileType,
+      type: profileType as GraphQLObjectType,
       args: {
         dto: { type: createProfileInputType },
       },
     },
     changeProfile: {
-      type: profileType,
+      type: profileType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: changeProfileInputType },
@@ -118,13 +118,13 @@ const mutation = new GraphQLObjectType({
       },
     },
     createPost: {
-      type: postType,
+      type: postType as GraphQLObjectType,
       args: {
         dto: { type: createPostInputType },
       },
     },
     changePost: {
-      type: postType,
+      type: postType as GraphQLObjectType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
         dto: { type: changePostInputType },
@@ -137,7 +137,7 @@ const mutation = new GraphQLObjectType({
       },
     },
     subscribeTo: {
-      type: userType,
+      type: userType as GraphQLObjectType,
       args: {
         userId: { type: new GraphQLNonNull(UUIDType) },
         authorId: { type: new GraphQLNonNull(UUIDType) },

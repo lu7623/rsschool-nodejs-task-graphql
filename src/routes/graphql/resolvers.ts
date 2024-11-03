@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { SubscriptionInput, UserInput } from './types/user.js';
+import { SubscriptionInput, UserFields, UserInput } from './types/user.js';
 import { UUID } from 'node:crypto';
-import { ProfileInput } from './types/profile.js';
-import { PostInput } from './types/posts.js';
+import { ChangeProfileInput, ProfileInput } from './types/profile.js';
+import { ChangePostInput, PostInput } from './types/posts.js';
 
 export const prisma = new PrismaClient();
 
@@ -20,7 +20,7 @@ const users = async () => {
   return users;
 };
 
-const createUser = async (args: { dto: UserInput }) => {
+const createUser = async (args: { dto: UserFields }) => {
   const user = await prisma.user.create({
     data: args.dto,
   });
@@ -76,7 +76,7 @@ const createProfile = async (args: { dto: ProfileInput }) => {
   return profile;
 };
 
-const changeProfile = async (args: { id: UUID; dto: ProfileInput }) => {
+const changeProfile = async (args: { id: UUID; dto: Partial<ChangeProfileInput> }) => {
   try {
     const user = await prisma.profile.update({
       where: {
@@ -139,7 +139,7 @@ const createPost = async (args: { dto: PostInput }) => {
   return post;
 };
 
-const changePost = async (args: { id: UUID; dto: PostInput }) => {
+const changePost = async (args: { id: UUID; dto: ChangePostInput }) => {
   try {
     const post = await prisma.post.update({
       where: {
@@ -166,11 +166,11 @@ const deletePost = async (args: { id: string }) => {
   }
 };
 
-const subscribeTo = async ({ userId: id, authorId }: SubscriptionInput) => {
+const subscribeTo = async (args: { userId: string, authorId:string }) => {
   try {
     const user = prisma.user.update({
-      where: { id },
-      data: { userSubscribedTo: { create: { authorId } } },
+      where: { id:args.userId },
+      data: { userSubscribedTo: { create: { authorId:args.authorId } } },
     });
     return user;
   } catch {
@@ -178,10 +178,10 @@ const subscribeTo = async ({ userId: id, authorId }: SubscriptionInput) => {
   }
 };
 
-const unsubscribeFrom = async ({ userId: subscriberId, authorId }: SubscriptionInput) => {
+const unsubscribeFrom = async (args:{ userId: string, authorId: string }) => {
   try {
     await prisma.subscribersOnAuthors.delete({
-      where: { subscriberId_authorId: { subscriberId, authorId } },
+      where: { subscriberId_authorId: { subscriberId: args.userId, authorId: args.authorId } },
     });
   } catch {
     return null;
